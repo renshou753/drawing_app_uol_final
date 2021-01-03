@@ -27,6 +27,7 @@ function setup() {
   toolbox.addTool(new mirrorDrawTool());
   toolbox.addTool(new PandaTool());
   toolbox.addTool(new EditableShapesTool());
+  toolbox.addTool(new ArtGeneratorTool())
   background(255);
 
 

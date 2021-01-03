@@ -75,7 +75,7 @@ function EditableShapesTool(){
             }
         })
 
-        finishBtn = createButton('finish shape')
+        finishBtn = createButton('Finish shape')
         finishBtn.parent("#editBtns");
 
         // add event for finish btn
