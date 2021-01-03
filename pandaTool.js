@@ -9,6 +9,7 @@ function PandaTool() {
   this.size = 20;
 
   this.draw = function () {
+
     var pandaSize = pandaSizeSlider.value();
     //if the mouse is pressed
     if (mouseIsPressed) {
@@ -17,4 +18,25 @@ function PandaTool() {
       image(panda, xPos, yPos, pandaSize, pandaSize);
     }
   };
+
+  //adds a slider to control the size of the panda drawing on canvas
+	this.populateOptions = function() {
+      // create a tag under options
+      select(".options").html("<div id='sizeOfPanda'></div>");
+
+      var s = select("#sizeOfPanda");
+      s.html("Size of Panda:");
+
+      // add panda slider
+      pandaSizeSlider = createSlider(5, 50, 20);
+      pandaSizeSlider.parent("#sizeOfPanda");
+
+  };
+  
+  //when the tool is deselected update the pixels to just show the drawing and
+	//hide the line of symmetry. Also clear options
+	this.unselectTool = function() {
+		//clear options
+		select("#sizeOfPanda").html("");
+	};
 }

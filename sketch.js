@@ -26,11 +26,10 @@ function setup() {
   toolbox.addTool(new SprayCanTool());
   toolbox.addTool(new mirrorDrawTool());
   toolbox.addTool(new PandaTool());
+  toolbox.addTool(new EditableShapesTool());
   background(255);
 
-  // add panda slider
-  pandaSizeSlider = createSlider(5, 50, 20);
-  pandaSizeSlider.parent("#sizeOfPanda");
+
 }
 
 function draw() {
