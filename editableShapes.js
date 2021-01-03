@@ -1,38 +1,107 @@
+/*
+1. plot out shape as a series of vertices
+2. edit the shapre using mouse drag
+   * if editing mode is on, highlight the location of vertices
+
+*/
+
 function EditableShapesTool(){
 	//set an icon and a name for the object
 	this.icon = "assets/shape.png";
-	this.name = "freehand";
+    this.name = "editShape";
+    this.editMode = false
+    this.currentShape = []
 
-	//to smoothly draw we'll draw a line from the previous mouse location
-	//to the current mouse location. The following values store
-	//the locations from the last frame. They are -1 to start with because
-	//we haven't started drawing yet.
-	var previousMouseX = -1;
-	var previousMouseY = -1;
+    //select canvas
+    this.c = select("canvas")
+
 
 	this.draw = function(){
+        noFill()
+        updatePixels()
+
 		//if the mouse is pressed
-		if(mouseIsPressed){
-			//check if they previousX and Y are -1. set them to the current
-			//mouse X and Y if they are.
-			if (previousMouseX == -1){
-				previousMouseX = mouseX;
-				previousMouseY = mouseY;
-			}
-			//if we already have values for previousX and Y we can draw a line from 
-			//there to the current mouse location
-			else{
-				line(previousMouseX, previousMouseY, mouseX, mouseY);
-				previousMouseX = mouseX;
-				previousMouseY = mouseY;
-			}
-		}
-		//if the user has released the mouse we want to set the previousMouse values 
-		//back to -1.
-		//try and comment out these lines and see what happens!
-		else{
-			previousMouseX = -1;
-			previousMouseY = -1;
-		}
-	};
+		if(this.mousePressOnCanvas(this.c) && mouseIsPressed){
+            if(!this.editMode){
+                this.currentShape.push({
+                    x: mouseX,
+                    y: mouseY
+                })
+            }else{
+                for(var i=0;i<this.currentShape.length;i++){
+                    if(dist(this.currentShape[i].x, this.currentShape[i].y, mouseX, mouseY)<15){
+                        this.currentShape[i].x = mouseX
+                        this.currentShape[i].y = mouseY
+                    }
+                }
+            }
+
+        }
+
+        beginShape();
+
+        for(var i=0;i<this.currentShape.length;i++){
+            vertex(this.currentShape[i].x, this.currentShape[i].y)
+
+            if(this.editMode){
+                fill('red')
+                ellipse(this.currentShape[i].x, this.currentShape[i].y, 10)
+                noFill()
+            }
+        }
+
+
+
+        endShape();
+
+    };
+    
+    //adds buttons to enable editing 
+	this.populateOptions = function() {
+        // create a tag under options
+        select(".options").html("<div id='editBtns'></div>");
+  
+        // add panda slider
+        editBtn = createButton('Edit Shape')
+        editBtn.parent("#editBtns");
+
+        editBtn.mousePressed(()=>{
+            if(this.editMode){
+                this.editMode = false
+                editBtn.html('Edit Shape')
+            }else{
+                this.editMode = true
+                editBtn.html('Add Vertex')
+            }
+        })
+
+        finishBtn = createButton('finish shape')
+        finishBtn.parent("#editBtns");
+
+        // add event for finish btn
+        finishBtn.mousePressed(()=>{
+            this.editMode = false
+            this.draw()
+            loadPixels()
+            this.currentShape = []
+        })
+  
+    };
+
+    //when the tool is deselected clear options
+    this.unselectTool = function() {
+        //clear options
+        select("#editBtns").html("");
+
+        //reset currentshape
+        this.currentShape = []
+    };
+
+    this.mousePressOnCanvas = function(canvas){
+        if(mouseX > canvas.elt.offsetLeft && mouseX < (canvas.elt.offsetLeft + canvas.width) && mouseY > canvas.elt.offsetTop && mouseY < canvas.height){
+            return true
+        }
+
+        return false
+    }
 }

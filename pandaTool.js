@@ -33,8 +33,7 @@ function PandaTool() {
 
   };
   
-  //when the tool is deselected update the pixels to just show the drawing and
-	//hide the line of symmetry. Also clear options
+  //when the tool is deselected clear options
 	this.unselectTool = function() {
 		//clear options
 		select("#sizeOfPanda").html("");
