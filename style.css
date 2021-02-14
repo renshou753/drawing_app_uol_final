@@ -76,21 +76,7 @@ body {
   background-color: #999;
 }
 
-#artGeneratorOptions * {
-  display: grid;
-  grid-auto-columns: 200px;
-  grid-auto-flow: column;
-  grid-area: auto;
+#artGeneratorOptions {
+  display: flex;
 }
 
-/* #colorPaletteOption{
-	grid-area: colorPaletteOption
-}
-
-#artStyleOption{
-
-}
-
-#generateBtns {
-  grid-area: generateBtns;
-} */
