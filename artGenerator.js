@@ -188,9 +188,8 @@ function ArtGeneratorTool() {
           let posX = [x_interval*j, x_interval*(j+1)]
           let posY_u = [y_interval*i, y_interval*(i+1)]
           let posY_d = [y_interval*(i+1), y_interval*(i)]
-          console.log(posX, posY_d)
           stroke(current_color)
-          if(random(0,1)==0){            
+          if(Math.round(random(0,1)==0)){            
             line(posX[0], posY_u[0], posX[1], posY_u[1])
           }else{
             line(posX[0], posY_d[0], posX[1], posY_d[1])
@@ -199,7 +198,45 @@ function ArtGeneratorTool() {
         }
       }
     }else if(style==this.art_styles_list[4]){ // cornered
+      for(let i=0;i<complexity*2;i++){
+        let current_color = this.get_random_color(cp)
+        let corner = Math.floor(random(0,4))
+        let first_x_area = 0
+        let second_x_area = 0
+        let first_y_area = 0
+        let second_y_area = 0
+        if(corner==0){
+          first_x_area = [-50, 100]
+          second_x_area = [0, this.width/2]
+          first_y_area = [-50, 100]
+          second_y_area = [this.height/2]
+        }else if(corner==1){
+          first_x_area = [this.width-100, this.width+50]
+          second_x_area = [this.width/2, this.width]
+          first_y_area = [-50, 100]
+          second_y_area = [0, this.height/2]
+        }else if(corner==2){
+          first_x_area = [this.width-100, this.width+50]
+          second_x_area = [this.width/2, this.width]
+          first_y_area = [this.height-100, this.height+50]
+          second_y_area = [this.height/2, this.height]
+        }else if(corner==3){
+          first_x_area = [-50, 100]
+          second_x_area = [0, this.width/2]
+          first_y_area = [this.height-100, this.height+50]
+          second_y_area = [this.height/2, this.height]
+        }
 
+        //console.log(corner, first_x_area, second_x_area, first_y_area, second_y_area)
+
+        let posX = [random(first_x_area[0], first_x_area[1]), random(second_x_area[0], second_x_area[1])]
+        let posY = [random(first_y_area[0], first_y_area[1]), random(second_y_area[0], second_y_area[1])]
+
+        console.log(posX, posY)
+
+        stroke(current_color)
+        line(posX[0], posY[0], posX[1], posY[1])
+      }
     }else if(style==this.art_styles_list[5]){
 
     }
