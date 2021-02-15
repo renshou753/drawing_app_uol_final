@@ -37,7 +37,7 @@ function ArtGeneratorTool() {
   this.width = this.c.width
   this.height = this.c.height
 
-  this.magnitude = [50, 400]
+  this.magnitude = [10, 100]
 
   this.draw = function () {
     
@@ -526,10 +526,9 @@ function ArtGeneratorTool() {
       let out_x_area = [this.width/6, 5*this.width/6]
       let out_y_area = [this.height/6, 5*this.height/6]
 
-      let current_color = this.get_random_color(cp)
-
       for(let i=0;i<complexity;i++){
         let size = random(magnitude, this.magnitude[0])
+        let current_color = this.get_random_color(cp)
 
         if(fill_shape==1){
           rad = random(5, size/2)
@@ -557,7 +556,185 @@ function ArtGeneratorTool() {
   };
 
   this.generate_squares = function(complexity, cp, style, magnitude){
+    if(style==this.art_styles_list[0]){ //chaotic
+      for(let i=0; i<complexity*2; i++){
+        let size = random(5, magnitude)
+        let posX = random(-size, this.width)
+        let posY = random(-size, this.height)
+        let current_color = this.get_random_color(cp)
+        fill(current_color)
+        square(posX, posY, size)
+      }
+    }else if(style==this.art_styles_list[1]){
+      let row_circle_count = Math.floor(complexity/2)+2
+      let point = this.width / (row_circle_count-2)
+      let row_count = this.height/point+2
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
 
+      for(let i=0;i<row_count;i++){
+
+        if(i%2==0){
+          current_color = color_one
+        }else{
+          current_color = color_two
+        }
+
+        for(let j=0;j<row_circle_count;j++){
+          let size = random(magnitude, this.magnitude[0])
+
+          let posX = j*point
+          let posY = i*point
+
+          strokeWeight(0)
+          fill(current_color)
+          
+          if(i%2==0){            
+            square(posX, posY, size*2)
+          }
+
+        }
+      }
+    }else if(style==this.art_styles_list[2]){
+        let row_circle_count = Math.floor(complexity/2)+2
+        let point = this.width / (row_circle_count-2)
+        let row_count = this.height/point+2
+        let color_one = this.get_random_color(cp)
+        let color_two = this.get_random_color(cp)
+        while(color_one==color_two){
+          color_two = this.get_random_color(cp)
+        }
+        let current_color = color_one
+  
+        for(let i=0;i<row_count;i++){
+  
+          for(let j=0;j<row_circle_count;j++){
+            if(j%1==0){
+              current_color = color_one
+            }else{
+              current_color = color_two
+            }
+            let size = random(magnitude, this.magnitude[0])
+  
+            let posX = j*point
+            let posY = i*point
+  
+            strokeWeight(0)
+            fill(current_color)
+            
+            if(j%2==0){            
+              square(posX-size/2, posY-size/2, size*2)
+            }
+  
+          }
+        }
+      
+    }else if(style==this.art_styles_list[3]){
+      let row_circle_count = Math.floor(complexity/2)+2
+      let point = this.width / (row_circle_count-2)
+      let row_count = this.height/point+2
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
+
+      for(let i=0;i<row_count;i++){
+
+        for(let j=0;j<row_circle_count;j++){
+          if((i+j)%2==0){
+            current_color = color_one
+          }else{
+            current_color = color_two
+          }
+
+          let posX = j*point
+          let posY = i*point
+
+          strokeWeight(0)
+          fill(current_color)
+                
+          square(posX, posY, point-point/10)
+          
+
+        }
+      }
+    }else if(style==this.art_styles_list[4]){
+      for(let i=0;i<4;i++){
+        let current_color = this.get_random_color(cp)
+        strokeWeight(0)
+        fill(current_color)
+        if(i==0){
+          square(0,0,this.magnitude[1])
+        }else if(i==1){
+          square(this.width-this.magnitude[1],0, this.magnitude[1])
+        }else if(i==2){
+          square(this.width-this.magnitude[1], this.height-this.magnitude[1], this.magnitude[1])
+        }else{
+          square(0,this.height-this.magnitude[1],this.magnitude[1])
+        }
+      }
+
+      for(let i=0;i<complexity*3;i++){
+        let size = random(magnitude, this.magnitude[0])
+        let current_color = this.get_random_color(cp)
+        let corner = Math.floor(random(0,4))
+        let first_x_area = 0
+        let first_y_area = 0
+        if(corner==0){
+          first_x_area = [-this.magnitude[1]/2, this.width/3]
+          first_y_area = [-this.magnitude[1]/2, this.height/2-this.magnitude[1]]
+        }else if(corner==1){
+          first_x_area = [2*this.width/3-this.magnitude[1], this.width]
+          first_y_area = [-this.magnitude[1]/2, this.height/2-this.magnitude[1]]
+        }else if(corner==2){
+          first_x_area = [2*this.width/3-this.magnitude[1], this.width]
+          first_y_area = [this.height/2, this.height]
+        }else if(corner==3){
+          first_x_area = [-this.magnitude[1], this.width/3]
+          first_y_area = [this.height/2, this.height]
+        }
+
+        let posX = random(first_x_area[0], first_x_area[1])
+        let posY = random(first_y_area[0], first_y_area[1])
+
+
+        strokeWeight(0)
+        fill(current_color)
+        
+        square(posX,posY,size*2)
+      } 
+    }else if(style==this.art_styles_list[5]){
+      let in_x_area = [this.width/4, 3*this.width/4]
+      let in_y_area = [this.height/4, 3*this.height/4]
+      let out_x_area = [this.width/6, 5*this.width/6]
+      let out_y_area = [this.height/6, 5*this.height/6]
+
+      for(let i=0;i<complexity;i++){
+        let size = random(magnitude, this.magnitude[0])
+        let current_color = this.get_random_color(cp)
+
+        strokeWeight(0)
+        fill(current_color)
+        
+        random_number = Math.floor(random(0,5))
+        let center_x, center_y
+        if(random_number<4){
+          center_x = random(in_x_area[0], in_x_area[1])
+          center_y = random(in_y_area[0], in_y_area[1])
+        }else{
+          center_x = random(out_x_area[0], out_x_area[1])
+          center_y = random(out_y_area[0], out_y_area[1])
+        }
+
+        square(center_x, center_y, size*2)
+      }
+    }
   };
 
   this.generate_polygons = function(complexity, cp, style, magnitude){
