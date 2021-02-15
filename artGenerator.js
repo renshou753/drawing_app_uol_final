@@ -43,7 +43,6 @@ function ArtGeneratorTool() {
     
   };
 
-  //adds a slider to control the size of the panda drawing on canvas
   this.populateOptions = function () {
     // create option tags
     select(".options").html(
@@ -181,6 +180,8 @@ function ArtGeneratorTool() {
   this.unselectTool = function () {
     //clear options
     select("#artGeneratorOptions").html("");
+    noFill()
+    noStroke()
   };
 
   this.generateLayerOne = function(art_style, art_shape, color_palette, complexity, magnitude){
@@ -194,7 +195,16 @@ function ArtGeneratorTool() {
       this.generate_circles(complexity, color_palette, art_style, magnitude, 0)
     }else if(this.art_shapes_list[2] == art_shape){
       this.generate_squares(complexity, color_palette, art_style, magnitude)
-    }else if(this.art_shapes_list[7] == art_shape){
+    }else if(this.art_shapes_list[3] == art_shape){
+      this.generate_polygons(complexity, color_palette, art_style, magnitude, 1)
+    }else if(this.art_shapes_list[4] == art_shape){
+      this.generate_polygons(complexity, color_palette, art_style, magnitude, 0)
+    }else if(this.art_shapes_list[5] == art_shape){
+      this.generate_dots(complexity, color_palette, art_style, magnitude)
+    }else if(this.art_shapes_list[6] == art_shape){
+      this.generate_curves(complexity, color_palette, art_style, magnitude)
+    }
+    else if(this.art_shapes_list[7] == art_shape){
       this.generate_circles(complexity, color_palette, art_style, magnitude, 1)
     }
   };
