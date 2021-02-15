@@ -48,13 +48,23 @@ function ArtGeneratorTool() {
     // create option tags
     select(".options").html(
       `<div id="artGeneratorOptions">
-            <div id="colorPaletteOption"></div>
-            <div id="artStyleOption"></div>
-            <div id="artShapeOption"></div>
-            <div id="complexityOption"></div>
-            <div id="sizeOption"></div>
-            <div id='generateBtns'></div>
-        </div>`
+        <div id="colorOption">
+          <div id="colorPaletteOption"></div>
+        </div>
+        <div id="layer1Options">
+          <div id="artStyleOption"></div>
+          <div id="artShapeOption"></div>
+          <div id="complexityOption"></div>
+          <div id="sizeOption"></div>
+        </div>
+        <div id="layer2Options">
+          <div id="artStyleOption2"></div>
+          <div id="artShapeOption2"></div>
+          <div id="complexityOption2"></div>
+          <div id="sizeOption2"></div>
+        </div>
+        <div id='generateBtns'></div>
+      </div>`
     );
 
     // create color palette selector, create options for selector
@@ -70,7 +80,7 @@ function ArtGeneratorTool() {
 
     // create art style selector, options for selector
     var artStyleOption = select("#artStyleOption");
-    artStyleOption.html("Art Style: ");
+    artStyleOption.html("Layer 1 Style: ");
 
     artStyleSelector = createSelect();
     artStyleSelector.parent("#artStyleOption");
@@ -79,9 +89,11 @@ function ArtGeneratorTool() {
       artStyleSelector.option(this.art_styles_list[i]);
     }
 
+    artStyleSelector.selected('Striped Vertical')
+
     // create art shape selector, create options
     var artShapeOption = select("#artShapeOption");
-    artShapeOption.html("Art Shape: ");
+    artShapeOption.html("Layer 1 Shape: ");
 
     artShapeSelector = createSelect();
     artShapeSelector.parent("#artShapeOption");
@@ -92,15 +104,53 @@ function ArtGeneratorTool() {
 
     // add complexity slider
     var complexityOption = select("#complexityOption");
-    complexityOption.html("Shape complexity: ");
+    complexityOption.html("Layer 1 Complexity: ");
     complexitySlider = createSlider(10, 30, 10);
     complexitySlider.parent("#complexityOption");
 
     // add shape size slider
     var sizeOption = select("#sizeOption");
-    sizeOption.html("Shape size: ");
+    sizeOption.html("Layer 1 Size: ");
     sizeSlider = createSlider(10, 100, 50);
     sizeSlider.parent("#sizeOption");
+
+    // create art style selector, options for selector
+    var artStyleOption2 = select("#artStyleOption2");
+    artStyleOption2.html("Layer 2 Style: ");
+
+    artStyleSelector2 = createSelect();
+    artStyleSelector2.parent("#artStyleOption2");
+
+    for (var i = 0; i < this.art_styles_list.length; i++) {
+      artStyleSelector2.option(this.art_styles_list[i]);
+    }
+
+    artStyleSelector2.selected('Cornered')
+
+    // create art shape selector, create options
+    var artShapeOption2 = select("#artShapeOption2");
+    artShapeOption2.html("Layer 2 Shape: ");
+
+    artShapeSelector2 = createSelect();
+    artShapeSelector2.parent("#artShapeOption2");
+
+    for (var i = 0; i < this.art_shapes_list.length; i++) {
+      artShapeSelector2.option(this.art_shapes_list[i]);
+    }
+
+    artShapeSelector2.selected('Rings')
+
+    // add complexity slider
+    var complexityOption2 = select("#complexityOption2");
+    complexityOption2.html("Layer 2 Complexity: ");
+    complexitySlider2 = createSlider(10, 30, 10);
+    complexitySlider2.parent("#complexityOption2");
+
+    // add shape size slider
+    var sizeOption2 = select("#sizeOption2");
+    sizeOption2.html("Layer 2 Size: ");
+    sizeSlider2 = createSlider(10, 100, 50);
+    sizeSlider2.parent("#sizeOption2");
 
     // add generate btn
     generateBtn = createButton("Generate");
@@ -113,11 +163,16 @@ function ArtGeneratorTool() {
       let layer_one_shape = artShapeSelector.value()
       let layer_one_complexity = complexitySlider.value()
       let layer_one_size = sizeSlider.value()
+      let layer_two_style = artStyleSelector2.value()
+      let layer_two_shape = artShapeSelector2.value()
+      let layer_two_complexity = complexitySlider2.value()
+      let layer_two_size = sizeSlider2.value()
       let bg_color = this.get_random_color(layer_cp)
       // filter out background color from palette
       let filtered_cp = layer_cp.filter(color=>color!=bg_color)
       background(bg_color)
       this.generateLayerOne(art_style=layer_one_style, art_shape=layer_one_shape, color_palette=filtered_cp, complexity=layer_one_complexity, magnitude=layer_one_size)
+      this.generateLayerOne(art_style=layer_two_style, art_shape=layer_two_shape, color_palette=filtered_cp, complexity=layer_two_complexity, magnitude=layer_two_size)
   })
     
   };
