@@ -737,7 +737,7 @@ function ArtGeneratorTool() {
     }
   };
 
-  this.generate_polygons = function(complexity, cp, style, magnitude){
+  this.generate_polygons = function(complexity, cp, style, magnitude, fill_shape){
 
   };
 
