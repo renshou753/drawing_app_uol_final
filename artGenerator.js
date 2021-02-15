@@ -1,6 +1,6 @@
 function ArtGeneratorTool() {
   //set an icon and a name for the object
-  this.icon = "assets/dice.png";
+  this.icon = "assets/abstract.png";
   this.name = "artGenerator";
   this.colorPalette = new colorPalette();
   this.palette = this.colorPalette.palette;
@@ -99,7 +99,7 @@ function ArtGeneratorTool() {
     // add shape size slider
     var sizeOption = select("#sizeOption");
     sizeOption.html("Shape size: ");
-    sizeSlider = createSlider(10, 100, 15);
+    sizeSlider = createSlider(10, 100, 50);
     sizeSlider.parent("#sizeOption");
 
     // add generate btn
@@ -137,14 +137,17 @@ function ArtGeneratorTool() {
       this.generate_lines(complexity, color_palette, art_style, magnitude)
     }else if(this.art_shapes_list[1] == art_shape){
       this.generate_circles(complexity, color_palette, art_style, magnitude, 0)
+    }else if(this.art_shapes_list[2] == art_shape){
+      this.generate_squares(complexity, color_palette, art_style, magnitude)
+    }else if(this.art_shapes_list[7] == art_shape){
+      this.generate_circles(complexity, color_palette, art_style, magnitude, 1)
     }
   };
 
   this.generate_lines = function(complexity, cp, style, magnitude){
-    let size = random(5, magnitude)
-    strokeWeight(size)
 
     if(style==this.art_styles_list[0]){    // chaotic
+
       for(let i=0; i<complexity; i++){
         let posX0 = random(this.startX-200, this.endX+200)
         let posX1 = random(this.startX, this.endX)
@@ -152,9 +155,13 @@ function ArtGeneratorTool() {
         let posY1 = random(this.startY, this.endY)
         let current_color = this.get_random_color(cp)
         stroke(current_color)
+        let size = random(5, magnitude)
+        strokeWeight(size)
         line(posX0, posY0, posX1, posY1)
       }
     }else if(style==this.art_styles_list[1]){   // striped horizontal
+      let size = random(5, magnitude)
+      strokeWeight(size)
       let interval = Math.floor(this.height/complexity)
       for(let i=0; i<complexity; i++){
         let posX0 = 0
@@ -166,6 +173,7 @@ function ArtGeneratorTool() {
         line(posX0, posY0, posX1, posY1)
       }
     }else if(style==this.art_styles_list[2]){  // striped vertical
+
       let interval = Math.floor(this.width/complexity)
       for(let i=0; i<complexity; i++){
         let posY0 = 0
@@ -174,9 +182,12 @@ function ArtGeneratorTool() {
         let posX1 = i*interval + random(0, this.width/10)
         let current_color = this.get_random_color(cp)
         stroke(current_color)
+        let size = random(5, magnitude)
+        strokeWeight(size)
         line(posX0, posY0, posX1, posY1)
       }    
     }else if(style==this.art_styles_list[3]){   // mosaic
+
       let row_line_count = Math.floor(complexity/3)+1
       let row_count = Math.floor(complexity/4)+1
       let x_interval = this.width/(row_line_count-1)
@@ -198,6 +209,8 @@ function ArtGeneratorTool() {
           let posY_u = [y_interval*i, y_interval*(i+1)]
           let posY_d = [y_interval*(i+1), y_interval*(i)]
           stroke(current_color)
+          let size = random(5, magnitude)
+          strokeWeight(size)
           if(Math.round(random(0,1)==0)){            
             line(posX[0], posY_u[0], posX[1], posY_u[1])
           }else{
@@ -207,6 +220,7 @@ function ArtGeneratorTool() {
         }
       }
     }else if(style==this.art_styles_list[4]){ // cornered
+
       for(let i=0;i<complexity*2;i++){
         let current_color = this.get_random_color(cp)
         let corner = Math.floor(random(0,4))
@@ -240,13 +254,18 @@ function ArtGeneratorTool() {
         let posY = [random(first_y_area[0], first_y_area[1]), random(second_y_area[0], second_y_area[1])]
 
         stroke(current_color)
+        let size = random(5, magnitude)
+        strokeWeight(size)
         line(posX[0], posY[0], posX[1], posY[1])
       }
     }else if(style==this.art_styles_list[5]){   //centered
+
       for(let i=0;i<complexity/2;i++){
         let current_color = this.get_random_color(cp)
         posX = [random(2*this.width/5, 3*this.width/5), random(0, this.width)]
         posY = [random(2*this.height/5, 3*this.height/5), random(0, this.height)]
+        let size = random(5, magnitude)
+        strokeWeight(size)
         stroke(current_color)
         line(posX[0], posY[0], posX[1], posY[1])
       }
@@ -259,22 +278,26 @@ function ArtGeneratorTool() {
   }
 
   this.generate_circles = function(complexity, cp, style, magnitude, fill_shape){
-    let size = random(magnitude, this.magnitude[0])
     
     if(style==this.art_styles_list[0]){     //chaotic
       for(let i=0;i<complexity;i++){
+        let size = random(magnitude, this.magnitude[0])
+        let current_color = this.get_random_color(cp)
+
         if(fill_shape==1){
-          strokeWeight(size)
-          fill(0)
+          rad = random(5, size/2)
+          strokeWeight(rad)
+          noFill()
+          stroke(current_color)
         }else{
-          let current_color = this.get_random_color(cp)
           strokeWeight(0)
           fill(current_color)
         }
 
         let centerX = random(-25, this.width+25)
         let centerY = random(-25, this.height+25)
-        circle(centerX, centerY, size)
+
+        circle(centerX, centerY, size*2)
       }
     }else if(style==this.art_styles_list[1]){ // stroped horizontal
       let row_circle_count = Math.floor(complexity/2)+2
@@ -288,6 +311,7 @@ function ArtGeneratorTool() {
       let current_color = color_one
 
       for(let i=0;i<row_count;i++){
+
         if(i%2==0){
           current_color = color_one
         }else{
@@ -295,19 +319,22 @@ function ArtGeneratorTool() {
         }
 
         for(let j=0;j<row_circle_count;j++){
+          let size = random(magnitude, this.magnitude[0])
 
           let posX = j*point
           let posY = i*point
 
           if(fill_shape==1){
-            strokeWeight(size)
-            fill(0)
+            rad = random(5, size/2)
+            strokeWeight(rad)
+            noFill()
+            stroke(current_color)
           }else{
             strokeWeight(0)
             fill(current_color)
           }
           if(i%2==0){            
-            circle(posX, posY, size)
+            circle(posX, posY, size*2)
           }
 
         }
@@ -325,6 +352,7 @@ function ArtGeneratorTool() {
 
       for(let i=0;i<row_count;i++){
         for(let j=0;j<row_circle_count;j++){
+          let size = random(magnitude, this.magnitude[0])
           if(i%2==0){
             current_color = color_one
           }else{
@@ -335,21 +363,22 @@ function ArtGeneratorTool() {
           let posY = i*point
 
           if(fill_shape==1){
-            strokeWeight(size)
-            fill(0)
+            rad = random(5, size/2)
+            strokeWeight(rad)
+            noFill()
+            stroke(current_color)
           }else{
             strokeWeight(0)
             fill(current_color)
           }
           if(j%2==0){            
-            circle(posX, posY, size)
+            circle(posX, posY, size*2)
           }
 
         }
       }
 
     }else if(style==this.art_styles_list[3]){    // mosaic
-      console.log(complexity)
       let row_circle_count = complexity
       let point = this.width / row_circle_count
       let row_count = this.height/point+1
@@ -368,12 +397,16 @@ function ArtGeneratorTool() {
             current_color = color_two
           }  
 
+          let size = random(magnitude, this.magnitude[0])
+
           let posX = point+j*(point+1)
           let posY = point+i*(point+1)
 
           if(fill_shape==1){
-            strokeWeight(size)
-            fill(0)
+            rad = random(5, size/2)
+            strokeWeight(rad)
+            noFill()
+            stroke(current_color)
           }else{
             strokeWeight(0)
             fill(current_color)
@@ -387,6 +420,7 @@ function ArtGeneratorTool() {
 
     }else if(style==this.art_styles_list[4]){    // cornered
       for(let i=0;i<complexity*2;i++){
+        let size = random(magnitude, this.magnitude[0])
         let current_color = this.get_random_color(cp)
         let corner = Math.floor(random(0,4))
         let first_x_area = 0
@@ -409,8 +443,10 @@ function ArtGeneratorTool() {
         let posY = random(first_y_area[0], first_y_area[1])
 
         if(fill_shape==1){
-          strokeWeight(size)
-          fill(0)
+          rad = random(5, size/2)
+          strokeWeight(rad)
+          noFill()
+          stroke(current_color)
         }else{
           strokeWeight(0)
           fill(current_color)
@@ -428,14 +464,18 @@ function ArtGeneratorTool() {
       let current_color = this.get_random_color(cp)
 
       for(let i=0;i<complexity;i++){
+        let size = random(magnitude, this.magnitude[0])
+
         if(fill_shape==1){
-          strokeWeight(size)
-          fill(0)
+          rad = random(5, size/2)
+          strokeWeight(rad)
+          noFill()
+          stroke(current_color)
         }else{
           strokeWeight(0)
           fill(current_color)
         }
-
+        
         random_number = Math.floor(random(0,5))
         let center_x, center_y
         if(random_number<4){
@@ -446,7 +486,7 @@ function ArtGeneratorTool() {
           center_y = random(out_y_area[0], out_y_area[1])
         }
 
-        circle(center_x, center_y, size*3)
+        circle(center_x, center_y, size*2)
       }
     }
   };
