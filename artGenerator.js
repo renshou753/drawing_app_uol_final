@@ -37,6 +37,8 @@ function ArtGeneratorTool() {
   this.width = this.c.width
   this.height = this.c.height
 
+  this.magnitude = [50, 400]
+
   this.draw = function () {
     
   };
@@ -97,7 +99,7 @@ function ArtGeneratorTool() {
     // add shape size slider
     var sizeOption = select("#sizeOption");
     sizeOption.html("Shape size: ");
-    sizeSlider = createSlider(50, 500, 50);
+    sizeSlider = createSlider(10, 100, 15);
     sizeSlider.parent("#sizeOption");
 
     // add generate btn
@@ -105,13 +107,17 @@ function ArtGeneratorTool() {
     generateBtn.parent("#generateBtns");
 
     generateBtn.mousePressed(()=>{
-      let layer_one_color = colorSelector.value()
-      let layer_one_cp = this.colorPalette.get_color_from_name(layer_one_color)
+      let layer_color = colorSelector.value()
+      let layer_cp = this.colorPalette.get_color_from_name(layer_color)
       let layer_one_style = artStyleSelector.value()
       let layer_one_shape = artShapeSelector.value()
       let layer_one_complexity = complexitySlider.value()
       let layer_one_size = sizeSlider.value()
-      this.generateLayerOne(art_style=layer_one_style, art_shape=layer_one_shape, color_palette=layer_one_cp, complexity=layer_one_complexity, magnitude=layer_one_size)
+      let bg_color = this.get_random_color(layer_cp)
+      // filter out background color from palette
+      let filtered_cp = layer_cp.filter(color=>color!=bg_color)
+      background(bg_color)
+      this.generateLayerOne(art_style=layer_one_style, art_shape=layer_one_shape, color_palette=filtered_cp, complexity=layer_one_complexity, magnitude=layer_one_size)
   })
     
   };
@@ -129,12 +135,15 @@ function ArtGeneratorTool() {
   this.generateArt = function(art_style, art_shape, color_palette, complexity, magnitude){
     if(this.art_shapes_list[0] == art_shape){
       this.generate_lines(complexity, color_palette, art_style, magnitude)
-    }else if(this.art_shapes_list[0] == art_shape){
-      this.generate_circles(complexity, color_palette, art_style, magnitude)
+    }else if(this.art_shapes_list[1] == art_shape){
+      this.generate_circles(complexity, color_palette, art_style, magnitude, 0)
     }
   };
 
   this.generate_lines = function(complexity, cp, style, magnitude){
+    let size = random(5, magnitude)
+    strokeWeight(size)
+
     if(style==this.art_styles_list[0]){    // chaotic
       for(let i=0; i<complexity; i++){
         let posX0 = random(this.startX-200, this.endX+200)
@@ -227,18 +236,20 @@ function ArtGeneratorTool() {
           second_y_area = [this.height/2, this.height]
         }
 
-        //console.log(corner, first_x_area, second_x_area, first_y_area, second_y_area)
-
         let posX = [random(first_x_area[0], first_x_area[1]), random(second_x_area[0], second_x_area[1])]
         let posY = [random(first_y_area[0], first_y_area[1]), random(second_y_area[0], second_y_area[1])]
-
-        console.log(posX, posY)
 
         stroke(current_color)
         line(posX[0], posY[0], posX[1], posY[1])
       }
-    }else if(style==this.art_styles_list[5]){
-
+    }else if(style==this.art_styles_list[5]){   //centered
+      for(let i=0;i<complexity/2;i++){
+        let current_color = this.get_random_color(cp)
+        posX = [random(2*this.width/5, 3*this.width/5), random(0, this.width)]
+        posY = [random(2*this.height/5, 3*this.height/5), random(0, this.height)]
+        stroke(current_color)
+        line(posX[0], posY[0], posX[1], posY[1])
+      }
     }
   };
 
@@ -247,8 +258,197 @@ function ArtGeneratorTool() {
     return cp[idx]
   }
 
-  this.generate_circles = function(complexity, cp, style, magnitude){
+  this.generate_circles = function(complexity, cp, style, magnitude, fill_shape){
+    let size = random(magnitude, this.magnitude[0])
+    
+    if(style==this.art_styles_list[0]){     //chaotic
+      for(let i=0;i<complexity;i++){
+        if(fill_shape==1){
+          strokeWeight(size)
+          fill(0)
+        }else{
+          let current_color = this.get_random_color(cp)
+          strokeWeight(0)
+          fill(current_color)
+        }
 
+        let centerX = random(-25, this.width+25)
+        let centerY = random(-25, this.height+25)
+        circle(centerX, centerY, size)
+      }
+    }else if(style==this.art_styles_list[1]){ // stroped horizontal
+      let row_circle_count = Math.floor(complexity/2)+2
+      let point = this.width / (row_circle_count-2)
+      let row_count = this.height/point+2
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
+
+      for(let i=0;i<row_count;i++){
+        if(i%2==0){
+          current_color = color_one
+        }else{
+          current_color = color_two
+        }
+
+        for(let j=0;j<row_circle_count;j++){
+
+          let posX = j*point
+          let posY = i*point
+
+          if(fill_shape==1){
+            strokeWeight(size)
+            fill(0)
+          }else{
+            strokeWeight(0)
+            fill(current_color)
+          }
+          if(i%2==0){            
+            circle(posX, posY, size)
+          }
+
+        }
+      }
+    }else if(style==this.art_styles_list[2]){  // vertical
+      let row_circle_count = Math.floor(complexity/2)+2
+      let point = this.width / (row_circle_count-2)
+      let row_count = this.height/point+2
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
+
+      for(let i=0;i<row_count;i++){
+        for(let j=0;j<row_circle_count;j++){
+          if(i%2==0){
+            current_color = color_one
+          }else{
+            current_color = color_two
+          }  
+
+          let posX = j*point
+          let posY = i*point
+
+          if(fill_shape==1){
+            strokeWeight(size)
+            fill(0)
+          }else{
+            strokeWeight(0)
+            fill(current_color)
+          }
+          if(j%2==0){            
+            circle(posX, posY, size)
+          }
+
+        }
+      }
+
+    }else if(style==this.art_styles_list[3]){    // mosaic
+      console.log(complexity)
+      let row_circle_count = complexity
+      let point = this.width / row_circle_count
+      let row_count = this.height/point+1
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
+
+      for(let i=0;i<row_count;i++){
+        for(let j=0;j<row_circle_count;j++){
+          if((i+j)%2==0){
+            current_color = color_one
+          }else{
+            current_color = color_two
+          }  
+
+          let posX = point+j*(point+1)
+          let posY = point+i*(point+1)
+
+          if(fill_shape==1){
+            strokeWeight(size)
+            fill(0)
+          }else{
+            strokeWeight(0)
+            fill(current_color)
+          }
+          if(j%2==0){            
+            circle(posX, posY, point)
+          }
+
+        }
+      }    
+
+    }else if(style==this.art_styles_list[4]){    // cornered
+      for(let i=0;i<complexity*2;i++){
+        let current_color = this.get_random_color(cp)
+        let corner = Math.floor(random(0,4))
+        let first_x_area = 0
+        let first_y_area = 0
+        if(corner==0){
+          first_x_area = [-50, this.width/3]
+          first_y_area = [-50, this.height/3]
+        }else if(corner==1){
+          first_x_area = [this.width/1.5, this.width+50]
+          first_y_area = [-50, this.height/3]
+        }else if(corner==2){
+          first_x_area = [this.width/1.5, this.width+50]
+          first_y_area = [this.height/1.5, this.height+50]
+        }else if(corner==3){
+          first_x_area = [-50, this.width/3]
+          first_y_area = [this.height/1.5, this.height+50]
+        }
+
+        let posX = random(first_x_area[0], first_x_area[1])
+        let posY = random(first_y_area[0], first_y_area[1])
+
+        if(fill_shape==1){
+          strokeWeight(size)
+          fill(0)
+        }else{
+          strokeWeight(0)
+          fill(current_color)
+        }
+        
+        circle(posX,posY,size*2)
+      }   
+
+    }else if(style==this.art_styles_list[5]){
+      let in_x_area = [this.width/4, 3*this.width/4]
+      let in_y_area = [this.height/4, 3*this.height/4]
+      let out_x_area = [this.width/6, 5*this.width/6]
+      let out_y_area = [this.height/6, 5*this.height/6]
+
+      let current_color = this.get_random_color(cp)
+
+      for(let i=0;i<complexity;i++){
+        if(fill_shape==1){
+          strokeWeight(size)
+          fill(0)
+        }else{
+          strokeWeight(0)
+          fill(current_color)
+        }
+
+        random_number = Math.floor(random(0,5))
+        let center_x, center_y
+        if(random_number<4){
+          center_x = random(in_x_area[0], in_x_area[1])
+          center_y = random(in_y_area[0], in_y_area[1])
+        }else{
+          center_x = random(out_x_area[0], out_x_area[1])
+          center_y = random(out_y_area[0], out_y_area[1])
+        }
+
+        circle(center_x, center_y, size*3)
+      }
+    }
   };
 
   this.generate_squares = function(complexity, cp, style, magnitude){
