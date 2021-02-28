@@ -738,7 +738,203 @@ function ArtGeneratorTool() {
   };
 
   this.generate_polygons = function(complexity, cp, style, magnitude, fill_shape){
+    if(style==this.art_styles_list[0]){     //chaotic
+      for(let i=0; i<complexity/2; i++){
+        let current_color = this.get_random_color(cp)
 
+        if(fill_shape==1){
+          rad = random(magnitude/5, this.magnitude[0]/5)
+          strokeWeight(rad)
+          noFill()
+          stroke(current_color)
+        }else{
+          strokeWeight(0)
+          fill(current_color)
+        }
+
+        let point_lst = []
+
+        let x1 = random(0, this.width)
+        let y1 = random(0, this.height)
+
+        for(let j=0;j<4;j++){
+          posX = random(x1-this.magnitude[1]*2, x1+this.magnitude[1]*2)
+          posY = random(y1-this.magnitude[1]*2, y1+this.magnitude[1]*2)
+          point_lst.push(posX)
+          point_lst.push(posY)
+        }
+
+        //array unpacking
+        let x2,y2,x3,y3,x4,y4
+        [x1,y1,x2,y2,x3,y3,x4,y4] = point_lst
+
+        quad(x1,y1,x2,y2,x3,y3,x4,y4)
+
+      }
+    }else if(style==this.art_styles_list[1]){   // Striped Horizontal
+      let row_circle_count = Math.floor(complexity/2)
+      let row_count = Math.floor(complexity/3)
+      let x_interval = this.width/row_circle_count
+      let y_interval = this.height/row_count
+
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
+
+      for(let i=0;i<row_count;i++){
+
+        if((i+1)%2==0){
+          current_color = color_one
+        }else{
+          current_color = color_two
+        }
+
+        for(let j=0;j<row_circle_count;j++){
+          if(fill_shape==1){
+            rad = random(magnitude/10, this.magnitude[0]/10)
+            strokeWeight(rad)
+            noFill()
+            stroke(current_color)
+          }else{
+            strokeWeight(0)
+            fill(current_color)
+          }
+
+          let x_area = [x_interval * j, x_interval * (j + 1)]
+          let y_area = [y_interval * i, y_interval * (i + 1)]
+
+          let point_lst = []
+          
+          if((i+1)%2==0){      
+            for(let k=0;k<4;k++){
+              point_lst.push(random(x_area[0],x_area[1]))
+              point_lst.push(random(y_area[0],y_area[1]))
+            }      
+
+            //array unpacking
+            let x1,y1,x2,y2,x3,y3,x4,y4
+            [x1,y1,x2,y2,x3,y3,x4,y4] = point_lst
+
+            quad(x1,y1,x2,y2,x3,y3,x4,y4)
+
+          }
+
+        }
+      }
+    }else if(style==this.art_styles_list[2]){   // striped vertical
+      let row_circle_count = Math.floor(complexity/2)
+      let row_count = Math.floor(complexity/3)
+      let x_interval = this.width/row_circle_count
+      let y_interval = this.height/row_count
+
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
+
+      for(let i=0;i<row_count;i++){
+
+        for(let j=0;j<row_circle_count;j++){
+          if(j%2==0){
+            current_color = color_one
+          }else{
+            current_color = color_two
+          }
+
+          if(fill_shape==1){
+            rad = random(magnitude/10, this.magnitude[0]/10)
+            strokeWeight(rad)
+            noFill()
+            stroke(current_color)
+          }else{
+            strokeWeight(0)
+            fill(current_color)
+          }
+
+          let x_area = [x_interval * j, x_interval * (j + 1)]
+          let y_area = [y_interval * i, y_interval * (i + 1)]
+
+          let point_lst = []
+          
+          if(j%2==0){      
+            for(let k=0;k<4;k++){
+              point_lst.push(random(x_area[0],x_area[1]))
+              point_lst.push(random(y_area[0],y_area[1]))
+            }      
+
+            //array unpacking
+            let x1,y1,x2,y2,x3,y3,x4,y4
+            [x1,y1,x2,y2,x3,y3,x4,y4] = point_lst
+
+            quad(x1,y1,x2,y2,x3,y3,x4,y4)
+
+          }
+
+        }
+      }
+    }else if(style==this.art_styles_list[3]){   //mosaic
+      let row_circle_count = Math.floor(complexity/2)
+      let row_count = Math.floor(complexity/3)
+      let x_interval = this.width/row_circle_count
+      let y_interval = this.height/row_count
+
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
+
+      for(let i=0;i<row_count;i++){
+
+        for(let j=0;j<row_circle_count;j++){
+          if((i+j)%2==0){
+            current_color = color_one
+          }else{
+            current_color = color_two
+          }
+
+          if(fill_shape==1){
+            rad = random(magnitude/10, this.magnitude[0]/10)
+            strokeWeight(rad)
+            noFill()
+            stroke(current_color)
+          }else{
+            strokeWeight(0)
+            fill(current_color)
+          }
+
+          let x_area = [x_interval * j, x_interval * (j + 1)]
+          let y_area = [y_interval * i, y_interval * (i + 1)]
+
+          let point_lst = []
+          
+    
+            for(let k=0;k<4;k++){
+              point_lst.push(random(x_area[0],x_area[1]))
+              point_lst.push(random(y_area[0],y_area[1]))
+            }      
+
+            //array unpacking
+            let x1,y1,x2,y2,x3,y3,x4,y4
+            [x1,y1,x2,y2,x3,y3,x4,y4] = point_lst
+
+            quad(x1,y1,x2,y2,x3,y3,x4,y4)
+
+          
+
+        }
+      }
+    }else if(style==this.art_styles_list[4]){ 
+
+    }else if(style==this.art_styles_list[5]){ 
+
+    }
   };
 
   this.generate_dots = function(complexity, cp, style, magnitude){
