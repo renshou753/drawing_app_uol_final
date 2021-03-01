@@ -1350,9 +1350,109 @@ function ArtGeneratorTool() {
 
       }
     }else if (style==this.art_styles_list[4]){
+      let row_curve_count = Math.floor(complexity/2)
+      let multiples = Math.floor(magnitude/5)
+      let row_count = Math.floor(complexity/3)
+      let x_interval = this.width/row_curve_count
+      let y_interval = this.height/row_count
 
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
+
+      for(let i=0;i<row_count;i++){
+
+        for(let j=0;j<row_curve_count;j++){
+          if((i+j)%2==0){
+            current_color = color_one
+          }else{
+            current_color = color_two
+          }
+          stroke(current_color)
+
+          let point_count = 4
+  
+          let point_lst = []
+  
+          for(let k=0;k<multiples;k++){
+            point_lst.push([])
+          }
+
+          let x_area = [x_interval * j, x_interval * (j + 1)]
+          let y_area = [y_interval * i, y_interval * (i + 1)]
+  
+          for(let k=0;k<point_count;k++){
+            x = random(x_area[0], x_area[1])
+            y = random(y_area[0], y_area[1])
+            for(let m=0;m<multiples;m++){
+              point_lst[m].push(x)
+              point_lst[m].push(y+m)
+            }
+
+          }       
+
+          for(let k=0;k<multiples;k++){
+            bezier(...point_lst[k])
+          }
+        }
+
+
+      }
     }else if (style==this.art_styles_list[5]){
+      let row_curve_count = Math.floor(complexity/2)
+      let multiples = Math.floor(magnitude/5)
+      let row_count = Math.floor(complexity/3)
+      let x_interval = this.width/row_curve_count
+      let y_interval = this.height/row_count
 
+      let color_one = this.get_random_color(cp)
+      let color_two = this.get_random_color(cp)
+      while(color_one==color_two){
+        color_two = this.get_random_color(cp)
+      }
+      let current_color = color_one
+
+      for(let i=0;i<row_count;i++){
+
+        for(let j=0;j<row_curve_count;j++){
+          if((i+j)%2==0){
+            current_color = color_one
+          }else{
+            current_color = color_two
+          }
+          stroke(current_color)
+
+          let point_count = 4
+  
+          let point_lst = []
+  
+          for(let k=0;k<multiples;k++){
+            point_lst.push([])
+          }
+
+          let x_area = [x_interval * j, x_interval * (j + 1)]
+          let y_area = [y_interval * i, y_interval * (i + 1)]
+  
+          for(let k=0;k<point_count;k++){
+            x = random(x_area[0], x_area[1])
+            y = random(y_area[0], y_area[1])
+            for(let m=0;m<multiples;m++){
+              point_lst[m].push(x)
+              point_lst[m].push(y+m)
+            }
+
+          }       
+
+          for(let k=0;k<multiples;k++){
+            bezier(...point_lst[k])
+          }
+        }
+
+
+      }
     }
   };
 
